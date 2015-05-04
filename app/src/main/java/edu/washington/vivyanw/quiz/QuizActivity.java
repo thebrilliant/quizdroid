@@ -1,6 +1,7 @@
 package edu.washington.vivyanw.quiz;
 
 import android.content.Intent;
+import android.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -35,19 +36,18 @@ public class QuizActivity extends ActionBarActivity {
         Intent launchingIntent = getIntent();
         topic = launchingIntent.getStringExtra("topic");
         numQ = launchingIntent.getIntExtra("numQ", 0);
-        qAnswered = 0;
-        correct = 0;
 
         ovrvwFragment = new OverviewFragment();
-        ovrvwFragment.setTopic(topic);
 
         if (savedInstanceState == null) {
-            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-
-                    ft.add(R.id.container, ovrvwFragment);
-                    ft.addToBackStack("Overview");
-                    ft.setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
-                    ft.commit();
+            Bundle info = new Bundle();
+            info.putString("topic", topic);
+            ovrvwFragment.setArguments(info);
+            getFragmentManager().beginTransaction()
+                    .setCustomAnimations(R.animator.card_flip_right_in, R.animator.card_flip_right_out)
+                    .add(R.id.container, ovrvwFragment)
+                    .addToBackStack("Overview")
+                    .commit();
         }
 
         title = (TextView) findViewById(R.id.txtTitle);
@@ -58,11 +58,16 @@ public class QuizActivity extends ActionBarActivity {
             @Override
             public void onClick(View v) {
                 if (next.getText().equals("Begin") || next.getText().equals("Next")) {
+                    Bundle fields = new Bundle();
+                    fields.putString("topic", topic);
+                    fields.putInt("answered", qAnswered);
                     questFragment = new QuestionFragment();
-                    questFragment.setFields(topic, qAnswered, correct);
-                    getSupportFragmentManager().beginTransaction()
+                    questFragment.setArguments(fields);
+                    next.setVisibility(View.INVISIBLE);
+                    getFragmentManager()
+                            .beginTransaction()
+                            .setCustomAnimations(R.animator.card_flip_right_in, R.animator.card_flip_right_out)
                             .replace(R.id.container, questFragment)
-                            .setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right)
                             .addToBackStack("Question")
                             .commit();
                     next.setText(R.string.submit);
@@ -70,12 +75,20 @@ public class QuizActivity extends ActionBarActivity {
                 } else if (next.getText().equals("Submit")) {
                     answer = questFragment.getAnswer();
                     rightAnswer = questFragment.getRightAnswer();
-                    correct = questFragment.getCorrect();
+                    if (answer.equals(rightAnswer)) {
+                        correct++;
+                    }
+                    Bundle fields = new Bundle();
+                    fields.putInt("correct", correct);
+                    fields.putInt("answered", qAnswered);
+                    fields.putString("right", rightAnswer);
+                    fields.putString("ans", answer);
                     ansFragment = new AnswerFragment();
-                    ansFragment.setFields(answer, rightAnswer, correct, qAnswered);
-                    getSupportFragmentManager().beginTransaction()
+                    ansFragment.setArguments(fields);
+                    getFragmentManager()
+                            .beginTransaction()
+                            .setCustomAnimations(R.animator.card_flip_right_in, R.animator.card_flip_right_out)
                             .replace(R.id.container, ansFragment)
-                            .setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right)
                             .commit();
                     if (qAnswered == numQ) {
                         next.setText(R.string.end);

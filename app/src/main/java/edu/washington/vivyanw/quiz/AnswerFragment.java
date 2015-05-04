@@ -1,7 +1,7 @@
 package edu.washington.vivyanw.quiz;
 
 import android.graphics.Color;
-import android.support.v4.app.Fragment;
+import android.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,7 +28,14 @@ public class AnswerFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        answer = getArguments().getString("ans");
+        rightAnswer = getArguments().getString("right");
+        correct = getArguments().getInt("correct");
+        numQ = getArguments().getInt("answered");
+
         View rootView = inflater.inflate(R.layout.answer_fragment, container, false);
+
         myAnswer = (TextView) rootView.findViewById(R.id.myAnswer);
         theAnswer = (TextView) rootView.findViewById(R.id.rightAnswer);
         counter = (TextView) rootView.findViewById(R.id.rightSoFar);
@@ -40,12 +47,5 @@ public class AnswerFragment extends Fragment {
         theAnswer.setText("Correct answer: " + rightAnswer);
         counter.setText("You have " + correct + " out of " + numQ + " correct!");
         return rootView;
-    }
-
-    public void setFields(String ans, String crctAns, int numC, int numberQ) {
-        answer = ans;
-        rightAnswer = crctAns;
-        correct = numC;
-        numQ = numberQ;
     }
 }

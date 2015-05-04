@@ -1,7 +1,7 @@
 package edu.washington.vivyanw.quiz;
 
 //import android.app.Fragment;
-import android.support.v4.app.Fragment;
+import android.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,6 +24,9 @@ public class OverviewFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
 
+        String tpc = getArguments().getString("topic");
+        topic = tpc;
+
         View view = inflater.inflate(R.layout.fragment_main, container, false);
         descr = (TextView) view.findViewById(R.id.txtDescr);
         if (topic.equalsIgnoreCase("math")) {
@@ -41,7 +44,7 @@ public class OverviewFragment extends Fragment {
         return view;
     }
 
-    public void setTopic(String tpc) {
+    /*public void setTopic(String tpc) {
         topic = tpc;
-    }
+    }*/
 }

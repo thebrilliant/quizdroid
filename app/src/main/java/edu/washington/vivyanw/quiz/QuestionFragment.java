@@ -1,10 +1,11 @@
 package edu.washington.vivyanw.quiz;
 
-import android.support.v4.app.Fragment;
+import android.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -15,6 +16,7 @@ import android.widget.TextView;
 public class QuestionFragment extends Fragment {
 
     TextView question;
+    Button next;
 
     RadioGroup answers;
     RadioButton opt1;
@@ -26,7 +28,6 @@ public class QuestionFragment extends Fragment {
     int qAnswered;
     String answer;
     String rightAnswer;
-    int correct;
 
     public QuestionFragment() {
     }
@@ -34,7 +35,12 @@ public class QuestionFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        topic = getArguments().getString("topic");
+        qAnswered = getArguments().getInt("answered");
         View rootView = inflater.inflate(R.layout.question_fragment, container, false);
+
+        QuizActivity parent = (QuizActivity) getActivity();
+        next = (Button) parent.findViewById(R.id.btnGo);
 
         answers = (RadioGroup) rootView.findViewById(R.id.rdogrpAnswers);
         question = (TextView) rootView.findViewById(R.id.txtQuestion);
@@ -62,18 +68,8 @@ public class QuestionFragment extends Fragment {
         return answer;
     }
 
-    public int getCorrect() {
-        return correct;
-    }
-
     public String getRightAnswer() {
         return rightAnswer;
-    }
-
-    public void setFields(String topic, int ans, int right) {
-        this.topic = topic;
-        qAnswered = ans;
-        correct = right;
     }
 
     private void setMathQ() {
@@ -90,17 +86,15 @@ public class QuestionFragment extends Fragment {
                 @Override
                 public void onCheckedChanged(RadioGroup group, int checkedId) {
                     if (checkedId == opt2.getId()) {
-                        correct++;
                         answer = (String) opt2.getText();
+                    } else if (checkedId == opt1.getId()) {
+                        answer = (String) opt1.getText();
+                    } else if (checkedId == opt4.getId()) {
+                        answer = (String) opt4.getText();
                     } else {
-                        if (checkedId == opt1.getId()) {
-                            answer = (String) opt1.getText();
-                        } else if (checkedId == opt4.getId()) {
-                            answer = (String) opt4.getText();
-                        } else {
-                            answer = (String) opt3.getText();
-                        }
+                        answer = (String) opt3.getText();
                     }
+                    next.setVisibility(View.VISIBLE);
                 }
             });
         } else {
@@ -116,17 +110,15 @@ public class QuestionFragment extends Fragment {
                 @Override
                 public void onCheckedChanged(RadioGroup group, int checkedId) {
                     if (checkedId == opt3.getId()) {
-                        correct++;
                         answer = (String) opt3.getText();
+                    } else if (checkedId == opt1.getId()) {
+                        answer = (String) opt1.getText();
+                    } else if (checkedId == opt2.getId()) {
+                        answer = (String) opt2.getText();
                     } else {
-                        if (checkedId == opt1.getId()) {
-                            answer = (String) opt1.getText();
-                        } else if (checkedId == opt2.getId()) {
-                            answer = (String) opt2.getText();
-                        } else {
-                            answer = (String) opt4.getText();
-                        }
+                        answer = (String) opt4.getText();
                     }
+                    next.setVisibility(View.VISIBLE);
                 }
             });
         }
@@ -147,17 +139,15 @@ public class QuestionFragment extends Fragment {
                 @Override
                 public void onCheckedChanged(RadioGroup group, int checkedId) {
                     if (checkedId == opt3.getId()) {
-                        correct++;
                         answer = (String) opt3.getText();
+                    } else if (checkedId == opt1.getId()) {
+                        answer = (String) opt1.getText();
+                    } else if (checkedId == opt2.getId()) {
+                        answer = (String) opt2.getText();
                     } else {
-                        if (checkedId == opt1.getId()) {
-                            answer = (String) opt1.getText();
-                        } else if (checkedId == opt2.getId()) {
-                            answer = (String) opt2.getText();
-                        } else {
-                            answer = (String) opt4.getText();
-                        }
+                        answer = (String) opt4.getText();
                     }
+                    next.setVisibility(View.VISIBLE);
                 }
             });
         } else {
@@ -173,17 +163,15 @@ public class QuestionFragment extends Fragment {
                 @Override
                 public void onCheckedChanged(RadioGroup group, int checkedId) {
                     if (checkedId == opt4.getId()) {
-                        correct++;
                         answer = (String) opt4.getText();
+                    } else if (checkedId == opt1.getId()) {
+                        answer = (String) opt1.getText();
+                    } else if (checkedId == opt2.getId()) {
+                        answer = (String) opt2.getText();
                     } else {
-                        if (checkedId == opt1.getId()) {
-                            answer = (String) opt1.getText();
-                        } else if (checkedId == opt2.getId()) {
-                            answer = (String) opt2.getText();
-                        } else {
-                            answer = (String) opt3.getText();
-                        }
+                        answer = (String) opt3.getText();
                     }
+                    next.setVisibility(View.VISIBLE);
                 }
             });
         }
@@ -203,17 +191,15 @@ public class QuestionFragment extends Fragment {
                 @Override
                 public void onCheckedChanged(RadioGroup group, int checkedId) {
                     if (checkedId == opt1.getId()) {
-                        correct++;
                         answer = (String) opt1.getText();
+                    } else if (checkedId == opt4.getId()) {
+                        answer = (String) opt4.getText();
+                    } else if (checkedId == opt2.getId()) {
+                        answer = (String) opt2.getText();
                     } else {
-                        if (checkedId == opt4.getId()) {
-                            answer = (String) opt4.getText();
-                        } else if (checkedId == opt2.getId()) {
-                            answer = (String) opt2.getText();
-                        } else {
-                            answer = (String) opt3.getText();
-                        }
+                        answer = (String) opt3.getText();
                     }
+                    next.setVisibility(View.VISIBLE);
                 }
             });
         } else if (qAnswered == 1) {
@@ -229,17 +215,15 @@ public class QuestionFragment extends Fragment {
                 @Override
                 public void onCheckedChanged(RadioGroup group, int checkedId) {
                     if (checkedId == opt2.getId()) {
-                        correct++;
                         answer = (String) opt2.getText();
+                    } else if (checkedId == opt4.getId()) {
+                        answer = (String) opt4.getText();
+                    } else if (checkedId == opt1.getId()) {
+                        answer = (String) opt1.getText();
                     } else {
-                        if (checkedId == opt4.getId()) {
-                            answer = (String) opt4.getText();
-                        } else if (checkedId == opt1.getId()) {
-                            answer = (String) opt1.getText();
-                        } else {
-                            answer = (String) opt3.getText();
-                        }
+                        answer = (String) opt3.getText();
                     }
+                    next.setVisibility(View.VISIBLE);
                 }
             });
         } else {
@@ -255,17 +239,15 @@ public class QuestionFragment extends Fragment {
                 @Override
                 public void onCheckedChanged(RadioGroup group, int checkedId) {
                     if (checkedId == opt4.getId()) {
-                        correct++;
                         answer = (String) opt4.getText();
+                    } else if (checkedId == opt1.getId()) {
+                        answer = (String) opt1.getText();
+                    } else if (checkedId == opt2.getId()) {
+                        answer = (String) opt2.getText();
                     } else {
-                        if (checkedId == opt1.getId()) {
-                            answer = (String) opt1.getText();
-                        } else if (checkedId == opt2.getId()) {
-                            answer = (String) opt2.getText();
-                        } else {
-                            answer = (String) opt3.getText();
-                        }
+                        answer = (String) opt3.getText();
                     }
+                    next.setVisibility(View.VISIBLE);
                 }
             });
         }
@@ -285,17 +267,15 @@ public class QuestionFragment extends Fragment {
                 @Override
                 public void onCheckedChanged(RadioGroup group, int checkedId) {
                     if (checkedId == opt4.getId()) {
-                        correct++;
                         answer = (String) opt4.getText();
+                    } else if (checkedId == opt1.getId()) {
+                        answer = (String) opt1.getText();
+                    } else if (checkedId == opt2.getId()) {
+                        answer = (String) opt2.getText();
                     } else {
-                        if (checkedId == opt1.getId()) {
-                            answer = (String) opt1.getText();
-                        } else if (checkedId == opt2.getId()) {
-                            answer = (String) opt2.getText();
-                        } else {
-                            answer = (String) opt3.getText();
-                        }
+                        answer = (String) opt3.getText();
                     }
+                    next.setVisibility(View.VISIBLE);
                 }
             });
         } else if (qAnswered == 1) {
@@ -311,17 +291,15 @@ public class QuestionFragment extends Fragment {
                 @Override
                 public void onCheckedChanged(RadioGroup group, int checkedId) {
                     if (checkedId == opt1.getId()) {
-                        correct++;
                         answer = (String) opt1.getText();
+                    } else if (checkedId == opt4.getId()) {
+                        answer = (String) opt4.getText();
+                    } else if (checkedId == opt2.getId()) {
+                        answer = (String) opt2.getText();
                     } else {
-                        if (checkedId == opt4.getId()) {
-                            answer = (String) opt4.getText();
-                        } else if (checkedId == opt2.getId()) {
-                            answer = (String) opt2.getText();
-                        } else {
-                            answer = (String) opt3.getText();
-                        }
+                        answer = (String) opt3.getText();
                     }
+                    next.setVisibility(View.VISIBLE);
                 }
             });
         } else {
@@ -337,17 +315,15 @@ public class QuestionFragment extends Fragment {
                 @Override
                 public void onCheckedChanged(RadioGroup group, int checkedId) {
                     if (checkedId == opt2.getId()) {
-                        correct++;
                         answer = (String) opt2.getText();
+                    } else if (checkedId == opt1.getId()) {
+                        answer = (String) opt1.getText();
+                    } else if (checkedId == opt4.getId()) {
+                        answer = (String) opt4.getText();
                     } else {
-                        if (checkedId == opt1.getId()) {
-                            answer = (String) opt1.getText();
-                        } else if (checkedId == opt4.getId()) {
-                            answer = (String) opt4.getText();
-                        } else {
-                            answer = (String) opt3.getText();
-                        }
+                        answer = (String) opt3.getText();
                     }
+                    next.setVisibility(View.VISIBLE);
                 }
             });
         }
@@ -367,17 +343,15 @@ public class QuestionFragment extends Fragment {
                 @Override
                 public void onCheckedChanged(RadioGroup group, int checkedId) {
                     if (checkedId == opt1.getId()) {
-                        correct++;
                         answer = (String) opt1.getText();
+                    } else if (checkedId == opt4.getId()) {
+                        answer = (String) opt4.getText();
+                    } else if (checkedId == opt2.getId()) {
+                        answer = (String) opt2.getText();
                     } else {
-                        if (checkedId == opt4.getId()) {
-                            answer = (String) opt4.getText();
-                        } else if (checkedId == opt2.getId()) {
-                            answer = (String) opt2.getText();
-                        } else {
-                            answer = (String) opt3.getText();
-                        }
+                        answer = (String) opt3.getText();
                     }
+                    next.setVisibility(View.VISIBLE);
                 }
             });
         } else if (qAnswered == 1) {
@@ -393,17 +367,15 @@ public class QuestionFragment extends Fragment {
                 @Override
                 public void onCheckedChanged(RadioGroup group, int checkedId) {
                     if (checkedId == opt3.getId()) {
-                        correct++;
                         answer = (String) opt3.getText();
+                    } else if (checkedId == opt4.getId()) {
+                        answer = (String) opt4.getText();
+                    } else if (checkedId == opt2.getId()) {
+                        answer = (String) opt2.getText();
                     } else {
-                        if (checkedId == opt4.getId()) {
-                            answer = (String) opt4.getText();
-                        } else if (checkedId == opt2.getId()) {
-                            answer = (String) opt2.getText();
-                        } else {
-                            answer = (String) opt1.getText();
-                        }
+                        answer = (String) opt1.getText();
                     }
+                    next.setVisibility(View.VISIBLE);
                 }
             });
         } else {
@@ -419,17 +391,15 @@ public class QuestionFragment extends Fragment {
                 @Override
                 public void onCheckedChanged(RadioGroup group, int checkedId) {
                     if (checkedId == opt2.getId()) {
-                        correct++;
                         answer = (String) opt2.getText();
+                    } else if (checkedId == opt4.getId()) {
+                        answer = (String) opt4.getText();
+                    } else if (checkedId == opt1.getId()) {
+                        answer = (String) opt1.getText();
                     } else {
-                        if (checkedId == opt4.getId()) {
-                            answer = (String) opt4.getText();
-                        } else if (checkedId == opt1.getId()) {
-                            answer = (String) opt1.getText();
-                        } else {
-                            answer = (String) opt3.getText();
-                        }
+                        answer = (String) opt3.getText();
                     }
+                    next.setVisibility(View.VISIBLE);
                 }
             });
         }
