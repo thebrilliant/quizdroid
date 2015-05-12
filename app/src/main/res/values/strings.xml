@@ -2,8 +2,8 @@
     <string name="app_name">Quiz</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
-    <string name="title_page">Welcome to Trivia!</string>
-    <string name="select">Select Topic:</string>
+    <string name="title_page">Welcome to Wonderland!</string>
+    <string name="select">Pick your poison:</string>
 
     <string name="title">Title</string>
     <string name="begin">Begin</string>

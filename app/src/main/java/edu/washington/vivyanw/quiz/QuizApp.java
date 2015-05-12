@@ -3,6 +3,8 @@ package edu.washington.vivyanw.quiz;
 import android.app.Application;
 import android.util.Log;
 
+import org.json.JSONException;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -19,7 +21,7 @@ public class QuizApp extends Application {
 
     private static QuizApp instance = null;
     private static String tag = "QuizApp";
-    public static TopicRepository quiz = new InMemoryRepository(items, shortDesc);
+    public static TopicRepository quiz = new InMemoryRepository();
 
     public QuizApp() throws IOException {
         //ensures that there is only one instance of QuizApp
@@ -28,13 +30,35 @@ public class QuizApp extends Application {
         } else {
             throw new RuntimeException("Cannot create more than one QuizApp");
         }
-        //InputStream jSon = new FileInputStream(new File("questions.json"));
-        //quiz.readJson(jSon);
+
+    }
+
+    public String readJSONFile(InputStream in) throws IOException {
+        int length = in.available();
+        byte[] buffer = new byte[length];
+        in.read(buffer);
+        in.close();
+
+        return new String(buffer, "UTF-8");
     }
 
     @Override
     public void onCreate() {
         super.onCreate();
+
+        try {
+            InputStream inputStream = getAssets().open("questions.json");
+            String jSon = readJSONFile(inputStream);
+            //quiz.readJson(inputStream);
+            quiz.readJsonText(jSon);
+        } catch (IOException error) {
+            Log.e(tag, "Couldn't open file", error);
+            error.printStackTrace();
+        } catch (JSONException error) {
+            Log.e(tag, "Could not read JSON", error);
+            error.printStackTrace();
+        }
+
         Log.d(tag,"QuizApp loaded and running");
     }
 }
@@ -121,7 +145,7 @@ class Topic {
     }
 
     public String toString() {
-        return title + "\n" + descrShort;
+        return title;
     }
 
     //sets the title
