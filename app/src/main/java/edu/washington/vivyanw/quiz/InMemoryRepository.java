@@ -69,88 +69,6 @@ public class InMemoryRepository implements TopicRepository {
     }
 
     @Override
-    public void readJson(InputStream in) throws IOException {
-        JsonReader reader = new JsonReader(new InputStreamReader(in, "UTF-8"));
-        readTopicArray(reader);
-    }
-
-    public void readTopicArray(JsonReader reader) throws IOException {
-        topics = new ArrayList<Topic>();
-        reader.beginArray();
-        while (reader.hasNext()) {
-            topics.add(readTopic(reader));
-        }
-        reader.endArray();
-    }
-
-    public Topic readTopic(JsonReader reader) throws IOException {
-        String descr;
-        Topic temp = new Topic();
-
-        reader.beginObject();
-        while (reader.hasNext()) {
-            String next = reader.nextName();
-            if (next.equals("title")) {
-                temp.setTitle(reader.nextString());
-            } else if (next.equals("desc")) {
-                descr = reader.nextString();
-                temp.setDescrShort(descr);
-                temp.setDescrLong(descr);
-            } else if (next.equals("questions")) {
-                temp.setQuestions(readQuestions(reader));
-            } else {
-                reader.skipValue();
-            }
-        }
-        return temp;
-    }
-
-    public List<Quiz> readQuestions(JsonReader reader) throws IOException {
-        List<Quiz> questions = new ArrayList<Quiz>();
-        reader.beginArray();
-        while (reader.hasNext()) {
-            questions.add(readQ(reader));
-        }
-        reader.endArray();
-        return questions;
-    }
-
-    public Quiz readQ(JsonReader reader) throws IOException {
-        Quiz temp = new Quiz();
-
-        reader.beginObject();
-        while (reader.hasNext()) {
-            String next = reader.nextName();
-            if (next.equals("text")) {
-                temp.setQuestion(reader.nextString());
-            } else if (next.equals("answer")) {
-                temp.setCorrect(reader.nextInt());
-            } else if (next.equals("answers")) {
-                readAnswers(reader, temp);
-            } else {
-                reader.skipValue();
-            }
-        }
-        reader.endObject();
-        return temp;
-    }
-
-    public void readAnswers(JsonReader reader, Quiz question) throws IOException {
-        List<String> ans = new ArrayList<String>();
-
-        reader.beginArray();
-        while (reader.hasNext()) {
-            ans.add(reader.nextString());
-        }
-        reader.endArray();
-
-        question.setAns1(ans.get(0));
-        question.setAns2(ans.get(1));
-        question.setAns3(ans.get(2));
-        question.setAns4(ans.get(3));
-    }
-
-    @Override
     public void readJsonText(String json) throws JSONException {
         JSONArray data = new JSONArray(json);
         topics = new ArrayList<Topic>();
@@ -158,15 +76,6 @@ public class InMemoryRepository implements TopicRepository {
         for (int i = 0; i < data.length(); i++) {
             topics.add(readJsonObject(data.getJSONObject(i)));
         }
-
-        /*String title = "empty";
-        String desc = "empty";
-        /*while (data.has("title")) {
-            title = data.getString("title");
-            desc = data.getString("desc");
-        }
-
-        Log.i("InMemoryRepository", "title: " + title + " desc: " + desc);*/
     }
 
     public Topic readJsonObject(JSONObject topic) throws JSONException {

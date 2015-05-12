@@ -49,7 +49,6 @@ public class QuizApp extends Application {
         try {
             InputStream inputStream = getAssets().open("questions.json");
             String jSon = readJSONFile(inputStream);
-            //quiz.readJson(inputStream);
             quiz.readJsonText(jSon);
         } catch (IOException error) {
             Log.e(tag, "Couldn't open file", error);

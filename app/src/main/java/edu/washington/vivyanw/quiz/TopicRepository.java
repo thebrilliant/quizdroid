@@ -15,8 +15,6 @@ public interface TopicRepository {
 
     public List<Topic> getTopicsByKeyword(String keyword);
 
-    public void readJson(InputStream in) throws IOException;
-
     public void readJsonText(String jSon) throws JSONException;
 
     //public Topic readTopic() throws IOException;
