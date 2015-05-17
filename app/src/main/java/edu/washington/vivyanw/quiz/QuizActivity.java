@@ -2,6 +2,8 @@ package edu.washington.vivyanw.quiz;
 
 import android.content.Intent;
 import android.app.Fragment;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -10,11 +12,9 @@ import android.widget.*;
 
 import java.util.List;
 
-
-/**
- * Created by WoodsFamily on 5/1/15.
- */
 public class QuizActivity extends ActionBarActivity {
+
+    public static final int SETTINGS = 1;
 
     OverviewFragment ovrvwFragment;
     QuestionFragment questFragment;
@@ -135,11 +135,46 @@ public class QuizActivity extends ActionBarActivity {
         });
     }
 
+    private void openPrefs() {
+        Intent i = new Intent(getApplicationContext(), UserPreferencesActivity.class);
+        startActivityForResult(i, SETTINGS);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode == SETTINGS) {
+            SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+
+            String downloadURL = sharedPrefs.getString("userQ", "questions.json");
+            String minute = sharedPrefs.getString("checkForUpdates", "0");
+            int interval;
+            if (minute.equals("15")) {
+                interval = 15;
+            } else if (minute.equals("30")) {
+                interval = 30;
+            } else if (minute.equals("60")) {
+                interval = 60;
+            } else if (minute.equals("120")) {
+                interval = 120;
+            } else if (minute.equals("240")) {
+                interval = 240;
+            } else {
+                interval = 0;
+            }
+
+            /*myApp.updateLocation = downloadURL;
+            myApp.updateInterval = interval;*/
+        }
+
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
@@ -149,11 +184,12 @@ public class QuizActivity extends ActionBarActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        switch (item.getItemId()) {
+            case R.id.action_settings:
+                openPrefs();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
-
-        return super.onOptionsItemSelected(item);
     }
 }

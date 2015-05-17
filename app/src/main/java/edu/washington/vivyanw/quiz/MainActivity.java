@@ -1,37 +1,38 @@
 package edu.washington.vivyanw.quiz;
 
-import android.content.Intent;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.*;
+import android.widget.*;
+import android.view.*;
+import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
-import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.*;
-import android.os.Build;
-import android.widget.*;
-
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.List;
 
 
 public class MainActivity extends ActionBarActivity {
 
-    String[] items = {"Math", "Physics", "Marvel Super Heroes", "Spongebob", "Legend of Zelda"};
-    String[] shortDesc = {"2 high level math Q", "physics theory questions", "superhero trivia",
-                          "some spongebob trivia", "the legend begins"};
+    public static final int SETTINGS = 1;
+
+    String downloadURL;
+    int interval;
+
     TopicRepository quiz;
     List<Topic> topicItems;
-    public static final String topicTag = "topic";
+    QuizApp myApp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        QuizApp myApp = (QuizApp) getApplication();
+        myApp = (QuizApp) getApplication();
         quiz = myApp.quiz;
 
+        if (new UserPreferencesActivity().isSet) {
+            checkForUpdates();
+        }
         topicItems = quiz.getAllTopics();
 
         ArrayAdapter<Topic> adapter = new ArrayAdapter<Topic>(this, android.R.layout.simple_list_item_1, topicItems);
@@ -40,13 +41,9 @@ public class MainActivity extends ActionBarActivity {
         topics.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String title = topicItems.get(position).getTitle();
-                //Toast.makeText(MainActivity.this, "Selected " + title + ": " + position, Toast.LENGTH_SHORT).show();
 
                 Intent next = new Intent(MainActivity.this, QuizActivity.class);
                 next.putExtra("topic", position);
-                //next.putExtra(topicTag, title);
-                //next.putExtra("numQ", topicItems.get(position).getQuestions().size());
 
                 Log.i("MainActivity", "firing intent" + next);
                 startActivity(next);
@@ -54,11 +51,61 @@ public class MainActivity extends ActionBarActivity {
         });
     }
 
+    public void checkForUpdates() {
+        //final SharedPreferences prefs = getSharedPreferences("user_prefs.xml", 0);
+        AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        BroadcastReceiver alarmReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                Toast.makeText(MainActivity.this, downloadURL, Toast.LENGTH_SHORT).show();
+            }
+        };
+        registerReceiver(alarmReceiver, new IntentFilter("edu.washington.vivyanw.updates"));
+        Intent i = new Intent();
+        i.setAction("edu.washington.vivyanw.updates");
+        am.setRepeating(AlarmManager.RTC, System.currentTimeMillis() + 5000, interval * 1000 * 60,
+                        PendingIntent.getBroadcast(MainActivity.this, 0, i, 0));
+    }
+
+    private void openPrefs() {
+        Intent i = new Intent(getApplicationContext(), UserPreferencesActivity.class);
+        startActivityForResult(i, SETTINGS);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode == SETTINGS) {
+            SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+
+            downloadURL = sharedPrefs.getString("userQ", "questions.json");
+            String minute = sharedPrefs.getString("checkForUpdates", "0");
+            if (minute.equals("15")) {
+                interval = 15;
+            } else if (minute.equals("30")) {
+                interval = 30;
+            } else if (minute.equals("60")) {
+                interval = 60;
+            } else if (minute.equals("120")) {
+                interval = 120;
+            } else if (minute.equals("240")) {
+                interval = 240;
+            } else {
+                interval = 0;
+            }
+
+            myApp.updateLocation = downloadURL;
+            myApp.updateInterval = interval;
+        }
+
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
@@ -68,11 +115,12 @@ public class MainActivity extends ActionBarActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        switch (item.getItemId()) {
+            case R.id.action_settings:
+                openPrefs();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
-
-        return super.onOptionsItemSelected(item);
     }
 }

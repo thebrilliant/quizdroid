@@ -1,7 +1,10 @@
 package edu.washington.vivyanw.quiz;
 
+import android.app.AlarmManager;
 import android.app.Application;
+import android.content.Context;
 import android.util.Log;
+import android.widget.Toast;
 
 import org.json.JSONException;
 
@@ -11,9 +14,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
-/**
- * Created by WoodsFamily on 5/8/15.
- */
 public class QuizApp extends Application {
     static String[] items = {"Math", "Physics", "Marvel Super Heroes", "Spongebob", "Legend of Zelda"};
     static String[] shortDesc = {"2 high level math Q", "physics theory questions", "superhero trivia",
@@ -23,6 +23,9 @@ public class QuizApp extends Application {
     private static String tag = "QuizApp";
     public static TopicRepository quiz = new InMemoryRepository();
 
+    String updateLocation;
+    int updateInterval;
+
     public QuizApp() throws IOException {
         //ensures that there is only one instance of QuizApp
         if (instance == null) {
@@ -30,7 +33,6 @@ public class QuizApp extends Application {
         } else {
             throw new RuntimeException("Cannot create more than one QuizApp");
         }
-
     }
 
     public String readJSONFile(InputStream in) throws IOException {
@@ -45,6 +47,8 @@ public class QuizApp extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+
+        //checkForUpdates();
 
         try {
             InputStream inputStream = getAssets().open("questions.json");

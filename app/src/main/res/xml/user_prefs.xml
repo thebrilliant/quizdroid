@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory
+        android:title="@string/action_settings">
+        <EditTextPreference
+            android:title="@string/location"
+            android:summary="@string/location_sum"
+            android:key="userQ" />
+
+        <ListPreference
+            android:key="checkForUpdates"
+            android:title="@string/interval"
+            android:summary="@string/interval_sum"
+            android:entries="@array/updateFreq"
+            android:entryValues="@array/updateFreqValues" />
+    </PreferenceCategory>
+
+</PreferenceScreen>

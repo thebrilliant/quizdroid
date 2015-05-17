@@ -1,5 +1,8 @@
 package edu.washington.vivyanw.quiz;
 
+import android.app.AlarmManager;
+import android.content.Context;
+
 import org.json.JSONException;
 
 import java.io.IOException;
@@ -17,5 +20,4 @@ public interface TopicRepository {
 
     public void readJsonText(String jSon) throws JSONException;
 
-    //public Topic readTopic() throws IOException;
 }

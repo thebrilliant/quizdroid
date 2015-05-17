@@ -1,34 +1,26 @@
 package edu.washington.vivyanw.quiz;
 
-import android.util.JsonReader;
-import android.util.Log;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by WoodsFamily on 5/8/15.
- */
 public class InMemoryRepository implements TopicRepository {
 
     String[] items = {"Math", "Physics", "Marvel Super Heroes", "Spongebob", "Legend of Zelda"};
     private List<Topic> topics;
 
     public InMemoryRepository() {
-        /*topics = new ArrayList<Topic>();
-        for (int i = 0; i < items.length; i++) {
-            Topic temp = new Topic();
-            temp.setTitle(items[i]);
-            temp.setDescrShort("none");
-            topics.add(temp);
-        }*/
+
     }
 
     public InMemoryRepository(String[] titles, String[] descr) {
