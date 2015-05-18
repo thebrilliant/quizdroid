@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Your answer"
+        android:id="@+id/myAnswer"
+        android:layout_above="@+id/rightAnswer"
+        android:layout_centerHorizontal="true"
+        android:textSize="20sp"
+        android:padding="5dp"
+        android:textColor="#ff47000d" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="right answer"
+        android:id="@+id/rightAnswer"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:textSize="20sp"
+        android:padding="5dp"
+        android:textColor="#ff004704" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="correct so far"
+        android:id="@+id/rightSoFar"
+        android:layout_below="@+id/rightAnswer"
+        android:layout_centerHorizontal="true"
+        android:textSize="20sp"
+        android:padding="5dp"
+        android:textColor="#ff004704" />
+
+</RelativeLayout>
