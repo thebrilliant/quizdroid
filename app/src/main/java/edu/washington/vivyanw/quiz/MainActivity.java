@@ -140,28 +140,27 @@ public class MainActivity extends ActionBarActivity {
                                         file = dm.openDownloadedFile(downloadID);
                                         FileInputStream fis = new FileInputStream(file.getFileDescriptor());
 
-                                        // YOUR CODE HERE [convert file to String here]
+                                        // convert file to String here
                                         String json = myApp.readJSONFile(fis);
-                                        //quiz.readJsonText(json);
+                                        quiz.readJsonText(json);
 
 
-                                        // YOUR CODE HERE [write string to data/data.json]
+                                        // write string to data/data.json
                                         myApp.writeFile(json);
 
                                         // convert your json to a string and echo it out here to
                                         // show that you did download it
                                         String proofDownload= myApp.readJSONFile(getAssets().open("questions.json"));
 
-                                        /*
-                                        String jsonString = ....myjson...to string().... chipotle burritos.... blah
-                                        Log.i("MyApp - Here is the json we download:", jsonString);
-                                        */
+                                        //String jsonString = ....myjson...to string()
+                                        Log.i("Main The json download:", proofDownload);
+
 
                                     } catch (FileNotFoundException e) {
                                         e.printStackTrace();
                                     } catch (IOException e) {
                                         e.printStackTrace();
-                                    //} catch (JSONException e) {
+                                    } catch (JSONException e) {
                                         e.printStackTrace();
                                     }
                                     break;
