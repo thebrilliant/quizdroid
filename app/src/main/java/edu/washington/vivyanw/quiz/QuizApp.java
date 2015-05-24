@@ -73,13 +73,13 @@ public class QuizApp extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        File file = new File(getFilesDir().getAbsolutePath(), "/data.json");
+        File file = new File(getFilesDir().getAbsolutePath(), "/questions.json");
         String jSon = null;
 
         if (file.exists()) {
             Log.i(tag, "file does exist! attempt to load");
             try {
-                FileInputStream dataFile = openFileInput("data.json");
+                FileInputStream dataFile = openFileInput("questions.json");
                 jSon = readJSONFile(dataFile);
                 quiz.readJsonText(jSon);
             } catch (IOException error) {

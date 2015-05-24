@@ -22,6 +22,7 @@ import org.json.JSONException;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 
@@ -87,14 +88,30 @@ public class MainActivity extends ActionBarActivity {
             ConnectivityManager cmgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
             NetworkInfo networkInfo = cmgr.getActiveNetworkInfo();
 
-            if (networkInfo.isConnected()) {
+            if (networkInfo == null) {
+                Toast.makeText(MainActivity.this, "You are not connected to the internet!", Toast.LENGTH_LONG).show();
+                int airplaneOn = Settings.System.getInt(getContentResolver(), Settings.System.AIRPLANE_MODE_ON, 1);
+                if (airplaneOn == 1) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                    builder.setTitle("Airplane Mode On");
+                    builder.setMessage("Airplane mode is turned on for your device. Do you want to turn it off?");
+                    builder.setPositiveButton("Yes please", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            Intent next = new Intent(Settings.ACTION_AIRPLANE_MODE_SETTINGS);
+                            startActivity(next);
+                        }
+                    });
+                    builder.create().show();
+                }
+            } else if (networkInfo.isConnected()) {
 
                 dm = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
 
                 Log.i("Main BroadcastReceiver", "onReceive of registered download receiver");
 
                 if (DownloadManager.ACTION_DOWNLOAD_COMPLETE.equals(action)) {
-                    Log.i("MyApp BroadcastReceiver", "download complete!");
+                    Log.i("Main BroadcastReceiver", "download complete!");
                     long downloadID = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, 0);
 
                     // if the downloadID exists
@@ -113,6 +130,7 @@ public class MainActivity extends ActionBarActivity {
                                 case DownloadManager.STATUS_RUNNING:
                                     break;
                                 case DownloadManager.STATUS_SUCCESSFUL:
+                                    Log.i("Main BR", "something was successful!");
                                     // The download-complete message said the download was "successful"
                                     ParcelFileDescriptor file;
                                     StringBuffer strContent = new StringBuffer("");
@@ -128,13 +146,11 @@ public class MainActivity extends ActionBarActivity {
 
 
                                         // YOUR CODE HERE [write string to data/data.json]
-                                        // [hint, i wrote a writeFile method in MyApp... ]
                                         myApp.writeFile(json);
-                                        
+
                                         // convert your json to a string and echo it out here to
                                         // show that you did download it
-
-
+                                        String proofDownload= myApp.readJSONFile(getAssets().open("questions.json"));
 
                                         /*
                                         String jsonString = ....myjson...to string().... chipotle burritos.... blah
@@ -170,21 +186,11 @@ public class MainActivity extends ActionBarActivity {
                                     break;
                             }
                         }
+                    } else {
+                        Log.d("Main BR", "The download doesn't exist! Oooh...scary");
                     }
                 } else {
-                    Toast.makeText(MainActivity.this, "You are not connected to the internet!", Toast.LENGTH_LONG).show();
-                    if (Settings.System.getInt(getContentResolver(), Settings.System.AIRPLANE_MODE_ON, 0) == 1) {
-                        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-                        builder.setTitle("Airplane Mode On");
-                        builder.setMessage("Airplane mode is turned on for your device. Do you want to turn it off?");
-                        builder.setPositiveButton("Yes please", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                Intent next = new Intent(Settings.ACTION_AIRPLANE_MODE_SETTINGS);
-                                startActivity(next);
-                            }
-                        });
-                    }
+
                 }
             }
         }
@@ -209,7 +215,7 @@ public class MainActivity extends ActionBarActivity {
             myApp.updateLocation = downloadURL;
             myApp.updateInterval = interval;
         }
-
+        checkForUpdates();
     }
 
     @Override

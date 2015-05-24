@@ -17,6 +17,7 @@ public class DownloadService extends IntentService {
     //fields
     DownloadManager mgr;
     public static final int ALARM = 42;
+    String url;
 
     public DownloadService () {
         super("DownloadService");
@@ -34,7 +35,7 @@ public class DownloadService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent workIntent) {
-        String url = "http://www.userprefs.com/data.json";  //get real url...
+        //String url = "http://www.userprefs.com/data.json";
         mgr = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
         DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
         long enqueue = mgr.enqueue(request);
@@ -48,10 +49,11 @@ public class DownloadService extends IntentService {
 
         AlarmManager manager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 
+        url = context.getSharedPreferences("user_prefs.xml", 0).getString("userQ", "questions.json");
+
         if (on) {
-            int mins = getSharedPreferences("", 0).getInt("", 5);
-            int refreshInterval = 5 * 60000; // 5 min x 60,000 milliseconds = total ms in 5 min
-            //needs to be user defined interval
+            int mins = Integer.parseInt(context.getSharedPreferences("user_prefs.xml", 0).getString("checkForUpdates", "5"));
+            int refreshInterval = mins * 60000; // 5 min x 60,000 milliseconds = total ms in 5 min
 
             Log.i("DownloadService", "setting alarm to " + refreshInterval);
 
